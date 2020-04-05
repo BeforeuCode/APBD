@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text.Json;
 using cw3.DAL;
 using cw3.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +23,16 @@ namespace cw3.Controllers
         [HttpGet]
         public IActionResult GetStudents(string orderBy)
         {
-            return Ok(_dbService.GetStudents());
+             return Ok(_dbService.GetStudents());
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetStudentEnrollmentById(string id)
+        {
+            return Ok(_dbService.GetStudentEnrollmentByIndexNumber(id));
+        }
+
+
 
     }
 

@@ -7,16 +7,28 @@ namespace cw3.Models
 {
     public class Student
     {
-        public int IdStudent { get; set; }
+        //I had to use public bacuause of JSON serialization 
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string IndexNumber { get; set; }
+        public DateTime BirthDate { get; set; }
+        public Enrollment Enrollment { get; set; }
 
-        public Student(int idStudent, string firstName, string lastName)
-        {
-            IdStudent = idStudent;
-            FirstName = firstName;
-            LastName = lastName;
+        public Student(){
         }
+
+        public static Student newStudent(string indexNumber, string firstName, string lastName, DateTime birthDate, Enrollment enrollment)
+        {
+            Student student = new Student();
+
+            student.IndexNumber = indexNumber;
+            student.FirstName = firstName;
+            student.LastName = lastName;
+            student.BirthDate = birthDate;
+            student.Enrollment = enrollment;
+
+            return student;
+        }
+      
     }
 }

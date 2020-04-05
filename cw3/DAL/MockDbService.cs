@@ -12,11 +12,14 @@ namespace cw3.DAL
         {
             _students = new List<Student>
             {
-            new Student(1, "Jan", "Kowalski"),
-            new Student(2, "Anna", "Malewski"),
-            new Student(3, "Andrzej", "Andrzejewicz")
             };
         }
+
+        public IEnumerable<Enrollment> GetStudentEnrollmentByIndexNumber(string id)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public IEnumerable<Student> GetStudents()
         {
             return _students;
