@@ -253,54 +253,54 @@ namespace cw3.DAL
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand command = new SqlCommand())
             {
-                command.CommandText = "SELECT * FROM Enrollment e INNER JOIN Studies s ON e.IdStudy = s.IdStudy WHERE s.Name = @Study AND e.Semester = @Semester;";
-                command.Parameters.AddWithValue("Study", promotion.Studies);
-                command.Parameters.AddWithValue("Semester", Convert.ToInt32(promotion.Semester));
+           
+                try { 
+                    command.Connection = connection;
+                    connection.Open();
+                    command.CommandText = "Promote";
+                    command.CommandType = CommandType.StoredProcedure;
+               
+                     SqlDataReader dataReader = command.ExecuteReader();
+
+                     int semester = dataReader.GetInt32(0);
+                     Study study = Study.newStudy(dataReader.GetString(1));
+                     DateTime dateTime = Convert.ToDateTime(dataReader.GetString(2));
+                
+                     dataReader.Close();
+               
+                     return (Enrollment.newEnrollment(semester, study, dateTime));
+                } 
+                catch(Exception ex){
+                    Console.WriteLine(ex);
+                    return null;
+                }
+
+            }
+        }
+
+        public Student GetStudentByIndex(string index)
+        {
+            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.CommandText = "SELECT * FROM Student WHERE IndexNumber = @IndexNumber";
+                command.Parameters.AddWithValue("IndexNumber", index);
                 command.Connection = connection;
                 connection.Open();
                 SqlDataReader dataReader = command.ExecuteReader();
-             
+
                 if (dataReader.Read())
                 {
-                   dataReader.Close();
-                   //Parameters would be the same
+                    Student student = Student.newStudent(
+                      dataReader["IndexNumber"].ToString(),
+                      dataReader["FirstName"].ToString(),
+                      dataReader["LastName"].ToString(),
+                      Convert.ToDateTime(dataReader["BirthDate"]),
+                      null);
 
-                    command.CommandText = "Promote";
-                    command.CommandType = CommandType.StoredProcedure;
-                
-                    var returnParameter = command.Parameters.Add("@NewEnrollmentId", SqlDbType.Int);
-                    returnParameter.Direction = ParameterDirection.ReturnValue;
-                    command.ExecuteNonQuery();
-                    var newEnrollment = returnParameter.Value;
-
-
-                    command.CommandText = "SELECT e.Semester, s.Name, e.StartDate " +
-                                                    "FROM Enrollment e " +
-                                                    "INNER JOIN Studies s ON e.IdStudy = s.IdStudy " +
-                                                    "WHERE IdEnrollment = @NewEnrollment";
-                    command.Parameters.AddWithValue("NewEnrollment", newEnrollment);
-                    command.CommandType = CommandType.Text;
-                    dataReader = command.ExecuteReader();
-
-                    if (dataReader.Read())
-                    {
-                        int semester = Convert.ToInt32(dataReader["Semester"]);
-                        Study study = Study.newStudy(dataReader["Name"].ToString());
-                        DateTime dateTime = Convert.ToDateTime(dataReader["StartDate"]);
-                        dataReader.Close();
-                        return (Enrollment.newEnrollment(semester, study, dateTime));
-
-                    }
-                    return null;
+                    return student;
                 }
-                else
-                {
-                    return null;
-                }
-
-
-
-
+                return null;
             }
         }
     }
