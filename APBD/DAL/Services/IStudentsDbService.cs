@@ -14,5 +14,6 @@ namespace cw3.DAL.Services
         public IEnumerable<Enrollment> GetStudentEnrollmentByIndexNumber(string id);
         public Enrollment EnrollStudent(EnrollmentDTO enrollment);
         public Enrollment Promote(PromotionDTO promotion);
+        public Student  GetStudentByIndex(string index);
     }
 }
