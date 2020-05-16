@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Threading.Tasks;
-using cw3.DAL;
-using cw3.DAL.DTO;
+﻿using cw3.DAL.DTO;
 using cw3.DAL.DTOs.Requests;
 using cw3.DAL.Services;
 using cw3.Models;
@@ -25,41 +19,48 @@ namespace cw3.Controllers
         [HttpPost]
         public IActionResult AddEnrollment(EnrollmentDTO enrollmentDTO)
         {
-            try
-            {
-                enrollmentDTO.GetType().GetFields().Select(field => field.GetValue(enrollmentDTO)).ToList().Find(variable => variable == null);
-                Enrollment enrollment = _dbService.EnrollStudent(enrollmentDTO);
+            if (!!ModelState.IsValid)
+                {
+                    var state = ModelState;
+                    return BadRequest();
+                }
+            Enrollment enrollment = _dbService.EnrollStudent(enrollmentDTO);
 
-                if (enrollment != null)
+            if (enrollment != null)
                 {
                     return Created("api/students/" + enrollmentDTO.IndexNumber, enrollment);
                 }
-                else
+            else
                 {
                     return BadRequest();
                 }
 
-            }
-            catch (ArgumentNullException ex)
-            {
-                return BadRequest(ex);
-            }
-
         }
+
+
+
+
         [HttpPost("promotions")]
         public IActionResult Promote(PromotionDTO promotionDTO)
         {
+         
+            if (!!ModelState.IsValid)
+                {
+                    var state = ModelState;
+                    return BadRequest();
+                }
             Enrollment enrollment = _dbService.Promote(promotionDTO);
             if (enrollment != null)
-            {
-                return Created("",enrollment);
-            }
+                {
+                    return Created("", enrollment);
+                }
             else
-            {
-                return BadRequest();
-            }
+                {
+                    return BadRequest();
+                }
         }
 
     }
-  
 }
+  
+
