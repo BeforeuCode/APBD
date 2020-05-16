@@ -277,6 +277,33 @@ namespace cw3.DAL
                     Console.WriteLine(ex);
                     return null;
                 }
+
+            }
+        }
+
+        public Student GetStudentByIndex(string index)
+        {
+            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.CommandText = "SELECT * FROM Student WHERE IndexNumber = @IndexNumber";
+                command.Parameters.AddWithValue("IndexNumber", index);
+                command.Connection = connection;
+                connection.Open();
+                SqlDataReader dataReader = command.ExecuteReader();
+
+                if (dataReader.Read())
+                {
+                    Student student = Student.newStudent(
+                      dataReader["IndexNumber"].ToString(),
+                      dataReader["FirstName"].ToString(),
+                      dataReader["LastName"].ToString(),
+                      Convert.ToDateTime(dataReader["BirthDate"]),
+                      null);
+
+                    return student;
+                }
+                return null;
             }
         }
     }
