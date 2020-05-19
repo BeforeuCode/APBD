@@ -11,6 +11,6 @@ namespace cw3.DAL.DTOs.Requests
         [Required]
         public string Studies { get; set; }
         [Required]
-        public string Semester { get; set; }
+        public int Semester { get; set; }
     }
 }

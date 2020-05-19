@@ -19,7 +19,7 @@ namespace cw3.Controllers
         [HttpPost]
         public IActionResult AddEnrollment(EnrollmentDTO enrollmentDTO)
         {
-            if (!!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 {
                     var state = ModelState;
                     return BadRequest();
@@ -44,7 +44,7 @@ namespace cw3.Controllers
         public IActionResult Promote(PromotionDTO promotionDTO)
         {
          
-            if (!!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 {
                     var state = ModelState;
                     return BadRequest();

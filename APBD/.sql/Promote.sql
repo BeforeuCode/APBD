@@ -1,4 +1,4 @@
-CREATE PROCEDURE Promote
+CREATE PROCEDURE PromoteStudent
 	@Semester int,
 	@Study varchar(50)
 AS
@@ -17,11 +17,10 @@ AS
 					IF @EnrollmentIdForUpdate IS NOT NULL
 						BEGIN
 							UPDATE Student SET IdEnrollment = @EnrollmentIdForUpdate WHERE IdEnrollment = @EnrollmentId;
-							 SELECT e.Semester, s.Name, e.StartDate 
-                                    FROM Enrollment e 
-                                    INNER JOIN Studies s ON e.IdStudy = s.IdStudy 
-                                    WHERE IdEnrollment = @EnrollmentIdForUpdate;
-							 RETURN;
+						    SELECT e.Semester, s.Name, e.StartDate 
+                                   FROM Enrollment e 
+                                   INNER JOIN Studies s ON e.IdStudy = s.IdStudy 
+                                   WHERE e.IdEnrollment = @EnrollmentIdForUpdate;
 						END
 					ELSE 
 						BEGIN
@@ -32,16 +31,14 @@ AS
 							VALUES (@NextEnrollmentId, @IdStudy, @Semester + 1, GETDATE());
 							
 							UPDATE Student SET IdEnrollment = @NextEnrollmentId WHERE IdEnrollment = @EnrollmentId;
-							 SELECT e.Semester, s.Name, e.StartDate 
-                                    FROM Enrollment e 
-                                    INNER JOIN Studies s ON e.IdStudy = s.IdStudy 
-                                    WHERE IdEnrollment = @NextEnrollmentId;
-							 RETURN;
+							SELECT e.Semester, s.Name, e.StartDate 
+                                   FROM Enrollment e 
+                                   INNER JOIN Studies s ON e.IdStudy = s.IdStudy 
+                                   WHERE e.IdEnrollment = @NextEnrollmentId;
 					END
 				END
 			ELSE
 				BEGIN
-					THROW 
+					RAISERROR (15600,-1,-1, 'PromoteS');  
 				END
 		END	
-	END		

@@ -257,18 +257,21 @@ namespace cw3.DAL
                 try { 
                     command.Connection = connection;
                     connection.Open();
-                    command.CommandText = "Promote";
+                    command.CommandText = "PromoteStudent";
                     command.CommandType = CommandType.StoredProcedure;
-               
-                     SqlDataReader dataReader = command.ExecuteReader();
+                    command.Parameters.AddWithValue("Semester", promotion.Semester);
+                    command.Parameters.AddWithValue("Study", promotion.Studies);
 
-                     int semester = dataReader.GetInt32(0);
-                     Study study = Study.newStudy(dataReader.GetString(1));
-                     DateTime dateTime = Convert.ToDateTime(dataReader.GetString(2));
-                
-                     dataReader.Close();
-               
-                     return (Enrollment.newEnrollment(semester, study, dateTime));
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    if (dataReader.Read())
+                    {
+                        int semester = dataReader.GetInt32(0);
+                        Study study = Study.newStudy(dataReader.GetString(1));
+                        DateTime dateTime = Convert.ToDateTime(dataReader.GetDateTime(2));
+
+                        return (Enrollment.newEnrollment(semester, study, dateTime));
+                    }
+                    return null;
                 } 
                 catch(Exception ex){
                     Console.WriteLine(ex);
