@@ -23,14 +23,14 @@ namespace cw3
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IUserDbService userDbService)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            UserDbService = userDbService;
+     
         }
 
         public IConfiguration Configuration { get; }
-        public IUserDbService UserDbService;
+        public IUserDbService UserDbService { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
