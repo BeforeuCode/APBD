@@ -1,10 +1,15 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using cw3.DAL;
 using cw3.DAL.Services;
 using cw3.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,10 +20,12 @@ namespace cw3.Controllers
     public class StudentsController : ControllerBase
     {
         private readonly IStudentsDbService _dbService;
+        public IConfiguration Configuration { get; set; }
 
-        public StudentsController(IStudentsDbService dbService)
+        public StudentsController(IStudentsDbService dbService, IConfiguration configuration)
         {
             _dbService = dbService;
+            Configuration = configuration;
         }
 
         [HttpGet]
