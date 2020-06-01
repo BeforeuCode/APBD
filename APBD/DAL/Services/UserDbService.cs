@@ -105,5 +105,10 @@ namespace cw3.DAL
         {
             throw new NotImplementedException();
         }
+
+        public object UpdateRefreshToken(object refreshToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
