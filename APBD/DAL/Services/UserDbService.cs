@@ -1,14 +1,7 @@
 ﻿using cw3.DAL.DTO;
 using cw3.DAL.Services;
 using cw3.Models;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace cw3.DAL
 {

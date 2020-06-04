@@ -1,23 +1,17 @@
-﻿using cw3.DAL;
-using cw3.DAL.DTO;
+﻿using cw3.DAL.DTO;
 using cw3.DAL.DTOs.Requests;
 using cw3.DAL.Services;
 using cw3.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 
 namespace cw3.DAL
 {
     public class StudentsDbService : IStudentsDbService
     {
-        private const string CONNECTION_STRING = "Data Source=db-mssql;Initial Catalog=s17545;Integrated Security=True";
+        s17545Context db = new s17545Context();
         static StudentsDbService()
         { }
 
@@ -26,24 +20,57 @@ namespace cw3.DAL
             throw new NotImplementedException();
         }
 
-        public Student GetStudentByIndex(string index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Enrollment> GetStudentEnrollmentByIndexNumber(string id)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<Student> GetStudents()
         {
-            throw new NotImplementedException();
+            var res = db.Student.ToList();
+            return res;
         }
 
         public Enrollment Promote(PromotionDTO promotion)
         {
             throw new NotImplementedException();
+        }
+
+        public Student RemoveStudent(string indexNumber)
+        {
+            try
+            {
+                var studentToRemove = db.Student.Where(s => s.IndexNumber.Equals(indexNumber)).FirstOrDefault();
+                db.Student.Remove(studentToRemove);
+                return studentToRemove;
+            }
+            catch (ArgumentNullException e)
+            {
+                return null;
+            }
+        }
+
+        public Student UpdateStudent(StudentDTO student)
+        {
+
+            try
+            {
+                var resStudent = db.Student.Where(s => s.IndexNumber.Equals(student.IndexNumber)).FirstOrDefault();
+                resStudent.FirstName = student.FirstName;
+                resStudent.LastName = student.LastName;
+                resStudent.BirthDate = Convert.ToDateTime(student.BirthDate);
+                db.SaveChanges();
+
+                var newStudent = new Student
+                {
+                    BirthDate = Convert.ToDateTime(student.BirthDate),
+                    FirstName = student.FirstName,
+                    LastName = student.LastName,
+                    IdEnrollment = resStudent.IdEnrollment,
+                    IndexNumber = student.IndexNumber
+                };
+
+                return newStudent;
+            }
+            catch (ArgumentNullException e)
+            {
+                return null;
+            }
         }
     }
 }

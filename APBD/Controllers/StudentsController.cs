@@ -1,17 +1,9 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
-using cw3.DAL;
+﻿using cw3.DAL.DTOs.Requests;
 using cw3.DAL.Services;
 using cw3.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace cw3.Controllers
 {
@@ -29,50 +21,51 @@ namespace cw3.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetStudents(string orderBy)
+        public IActionResult GetStudents()
         {
-            //return Ok(_dbService.GetStudents());
-            return BadRequest();
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetStudentEnrollmentById(string id)
-        {
-            //return Ok(_dbService.GetStudentEnrollmentByIndexNumber(id));
-            return BadRequest();
-        }
-
-        //https://localhost:44386/api/students/query?orderBy=lastname
-        [HttpGet("query")]
-        public string GetStudentByQuery(String orderBy)
-        {
-            // return $"Kowalski, Malewski, Andrzejewski sortowanie = {orderBy}";
-            return "";
-        }
-
-        //https://localhost:44386/api/students
-        [HttpPost("add")]
-        public IActionResult CreateStudent(Student student)
-        {
-            //.. add to db
-            //.. generate index
-            // student.IndexNumber = $"s{new Random().Next(1, 20000)}";
-            //return Ok(student);
-            return BadRequest();
+            return Ok(_dbService.GetStudents());
         }
 
         [HttpPut("update/{id}")]
-        public IActionResult UpdateStudent(int id)
+        public IActionResult UpdateStudent(StudentDTO studentDTO)
         {
-            //return Ok("Aktualizacja dokończona");
-            return BadRequest();
+
+            if (!ModelState.IsValid)
+            {
+                var state = ModelState;
+                return BadRequest();
+            }
+            Student student = _dbService.UpdateStudent(studentDTO);
+
+            if (student != null)
+            {
+                return Created("/", student);
+            }
+            else
+            {
+                return BadRequest();
+            }
+
         }
 
         [HttpDelete("delete/{id}")]
-        public IActionResult DeleteStudent(int id)
+        public IActionResult DeleteStudent(string indexNumber)
         {
-            //return Ok("Usuwanie ukończkone");
-            return BadRequest();
+            if (!ModelState.IsValid)
+            {
+                var state = ModelState;
+                return BadRequest();
+            }
+            Student student = _dbService.RemoveStudent(indexNumber);
+
+            if (student != null)
+            {
+                return Ok(student);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }
