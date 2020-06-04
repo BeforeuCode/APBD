@@ -38,7 +38,7 @@ namespace cw3
             services.AddSingleton<IStudentsDbService, StudentsDbService>();
             services.AddSingleton<IUserDbService, UserDbService>();
             services.AddControllers();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+           /* services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                    .AddJwtBearer(options =>
                    {
                        options.TokenValidationParameters = new TokenValidationParameters
@@ -50,7 +50,7 @@ namespace cw3
                            ValidAudience = "Students",
                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]))
                        };
-                   });
+                   });*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,7 +67,7 @@ namespace cw3
 
             app.UseAuthorization();
 
-            app.UseMiddleware<LoggingMiddleware>();
+          /*  app.UseMiddleware<LoggingMiddleware>();
             app.Use(async (context, next) =>
             {
                 if (!context.Request.Headers.ContainsKey("Index"))
@@ -89,7 +89,7 @@ namespace cw3
                     await context.Response.WriteAsync("Student with that id doesnt exist");
                     return;
                 }   
-             });
+             });*/
 
             app.UseEndpoints(endpoints =>
             {

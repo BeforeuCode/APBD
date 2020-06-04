@@ -31,20 +31,23 @@ namespace cw3.Controllers
         [HttpGet]
         public IActionResult GetStudents(string orderBy)
         {
-            return Ok(_dbService.GetStudents());
+            //return Ok(_dbService.GetStudents());
+            return BadRequest();
         }
 
         [HttpGet("{id}")]
         public IActionResult GetStudentEnrollmentById(string id)
         {
-            return Ok(_dbService.GetStudentEnrollmentByIndexNumber(id));
+            //return Ok(_dbService.GetStudentEnrollmentByIndexNumber(id));
+            return BadRequest();
         }
 
         //https://localhost:44386/api/students/query?orderBy=lastname
         [HttpGet("query")]
         public string GetStudentByQuery(String orderBy)
         {
-            return $"Kowalski, Malewski, Andrzejewski sortowanie = {orderBy}";
+            // return $"Kowalski, Malewski, Andrzejewski sortowanie = {orderBy}";
+            return "";
         }
 
         //https://localhost:44386/api/students
@@ -53,20 +56,23 @@ namespace cw3.Controllers
         {
             //.. add to db
             //.. generate index
-            student.IndexNumber = $"s{new Random().Next(1, 20000)}";
-            return Ok(student);
+            // student.IndexNumber = $"s{new Random().Next(1, 20000)}";
+            //return Ok(student);
+            return BadRequest();
         }
 
         [HttpPut("update/{id}")]
         public IActionResult UpdateStudent(int id)
         {
-            return Ok("Aktualizacja dokończona");
+            //return Ok("Aktualizacja dokończona");
+            return BadRequest();
         }
 
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteStudent(int id)
         {
-            return Ok("Usuwanie ukończkone");
+            //return Ok("Usuwanie ukończkone");
+            return BadRequest();
         }
     }
 }

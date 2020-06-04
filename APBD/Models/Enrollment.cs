@@ -1,33 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cw3.Models
 {
-    public class Enrollment
+    public partial class Enrollment
     {
-        public int Semester { get; set; }
-
-        public DateTime StartDate { get; set; }
-        public Study Study { get; set; }
-
         public Enrollment()
         {
-
+            Student = new HashSet<Student>();
         }
 
-        public static Enrollment newEnrollment(int semester, Study study, DateTime startDate)
-        {
-            Enrollment enrollment = new Enrollment();
+        public int IdEnrollment { get; set; }
+        public int Semester { get; set; }
+        public int IdStudy { get; set; }
+        public DateTime StartDate { get; set; }
 
-            enrollment.Semester = semester;
-            enrollment.StartDate = startDate;
-            enrollment.Study = study;
-
-            return enrollment;
-        }
-
-
+        public virtual Studies IdStudyNavigation { get; set; }
+        public virtual ICollection<Student> Student { get; set; }
     }
 }
