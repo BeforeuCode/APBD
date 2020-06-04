@@ -20,8 +20,21 @@ namespace cw3.Controllers
         public IActionResult AddEnrollment(EnrollmentDTO enrollmentDTO)
         {
 
-            return BadRequest();
+            if (!ModelState.IsValid)
+            {
+                var state = ModelState;
+                return BadRequest();
+            }
+            Enrollment enrollment = _dbService.EnrollStudent(enrollmentDTO);
 
+            if (enrollment != null)
+            {
+                return Created("/", enrollment);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost("promotions")]

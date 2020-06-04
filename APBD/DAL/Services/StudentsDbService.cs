@@ -17,7 +17,62 @@ namespace cw3.DAL
 
         public Enrollment EnrollStudent(EnrollmentDTO enrollment)
         {
-            throw new NotImplementedException();
+
+            DateTime parsedDate = Convert.ToDateTime(enrollment.BirthDate);
+
+            try
+            {
+                var studies = db.Studies.Where(study => study.Name.Equals(enrollment.Studies)).First();
+                int idStudies = studies.IdStudy;
+
+                var resEnrollment = db.Enrollment.Where(enrollment => enrollment.IdStudy.Equals(idStudies)).FirstOrDefault();
+
+                if (resEnrollment != null)
+                {
+                    int idEnrollment = resEnrollment.IdEnrollment;
+                    var studentToEnroll = new Student
+                    {
+                        IndexNumber = enrollment.IndexNumber,
+                        FirstName = enrollment.FirstName,
+                        LastName = enrollment.LastName,
+                        BirthDate = parsedDate,
+                        IdEnrollment = idEnrollment
+                    };
+                    db.Student.Add(studentToEnroll);
+                    db.SaveChanges();
+
+                    return resEnrollment;
+
+                }
+                else
+                {
+                    var newEnrollment = new Enrollment
+                    {
+                        Semester = 1,
+                        StartDate = new DateTime(),
+                        IdStudy = idStudies,
+                    };
+                    db.Enrollment.Add(newEnrollment);
+
+                    var studentToEnroll = new Student
+                    {
+                        IndexNumber = enrollment.IndexNumber,
+                        FirstName = enrollment.FirstName,
+                        LastName = enrollment.LastName,
+                        BirthDate = parsedDate,
+                        IdEnrollment = newEnrollment.IdEnrollment
+                    };
+
+                    db.Student.Add(studentToEnroll);
+                    db.SaveChanges();
+
+                    return newEnrollment;
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                return null;
+            }
         }
 
         public IEnumerable<Student> GetStudents()
