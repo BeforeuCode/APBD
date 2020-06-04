@@ -83,7 +83,48 @@ namespace cw3.DAL
 
         public Enrollment Promote(PromotionDTO promotion)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var resEnrollment = db.Enrollment.Join(db.Studies, e => e.IdStudy, s => s.IdStudy, (e, s) => new { e, s })
+                .Where(entry => entry.s.Name.Equals(promotion.Studies))
+                .Where(entry => entry.e.Semester.Equals(promotion.Semester)).First();
+
+                var enrollmentForUpdate = db.Enrollment.Join(db.Studies, e => e.IdStudy, s => s.IdStudy, (e, s) => new { e, s })
+                .Where(entry => entry.s.Name.Equals(promotion.Studies))
+                .Where(entry => entry.e.Semester.Equals(promotion.Semester + 1)).FirstOrDefault();
+
+                var studentsToPromote = db.Student.Where(s => s.IdEnrollment.Equals(resEnrollment.e.IdEnrollment)).ToList();
+
+                if (enrollmentForUpdate != null)
+                {
+                   
+                    studentsToPromote.ForEach(s => s.IdEnrollment = enrollmentForUpdate.e.IdEnrollment);
+                    db.SaveChanges();
+
+                    return enrollmentForUpdate.e;
+
+                }
+                else
+                {
+
+                    var studies = db.Studies.Where(s => s.Name.Equals(promotion.Studies)).First();
+                    var newEnrollment = new Enrollment
+                    {
+                        IdStudy = studies.IdStudy,
+                        Semester = promotion.Semester + 1,
+                        StartDate = new DateTime(),
+                    };
+
+                    studentsToPromote.ForEach(s => s.IdEnrollment = newEnrollment.IdEnrollment);
+                    db.SaveChanges();
+                   
+                    return newEnrollment;
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                return null;
+            }
         }
 
         public Student RemoveStudent(string indexNumber)
